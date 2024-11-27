@@ -3,7 +3,6 @@ import "./ScheduleToday.css";
 import ImageComponent from "../../components/ImageComponent";
 import SelectComponent from "../../components/SelectComponent";
 
-// Teacher hierarchy
 const teacherHierarchy = {
   "Horace Slughorn": ["Rubeus Hagrid"],
   "Severus Snape": ["Rubeus Hagrid"],
@@ -63,42 +62,36 @@ const ScheduleToday = () => {
   const [teachers, setTeachers] = useState(initialTeachers);
   const [students, setStudents] = useState(initialStudents);
 
-  // Function to assign teachers based on availability and hierarchy
   const assignTeachers = () => {
     setStudents((prevStudents) =>
       prevStudents.map((student) => {
         if (!student.teacher) {
-          student.teacher = "Rubeus Hagrid"; // Assign standby teacher
+          student.teacher = "Rubeus Hagrid"; 
         }
         return student;
       })
     );
   };
 
-  // Function to reassign students based on teacher attendance
   const reassignStudents = (absentTeachers, presentTeachers) => {
     setStudents((prevStudents) =>
       prevStudents.map((student) => {
         let assignedTeacher = student.teacher;
         const originalTeacher = student.originalTeacher || assignedTeacher;
   
-        // Reassign if the current teacher is absent
         if (absentTeachers.includes(assignedTeacher)) {
-          // Traverse up the hierarchy to find the next available teacher
           while (assignedTeacher && absentTeachers.includes(assignedTeacher)) {
             const higherTeacher = teacherHierarchy[assignedTeacher]?.[0];
-            assignedTeacher = higherTeacher || "Not Assigned"; // If no higher teacher, assign "Not Assigned"
+            assignedTeacher = higherTeacher || "Not Assigned"; 
           }
         }
   
-        // If the assigned teacher is now present, restore the original teacher
         if (presentTeachers.includes(originalTeacher)) {
-          assignedTeacher = originalTeacher; // Restore the original teacher if they are present
+          assignedTeacher = originalTeacher; 
         } else {
-          // If the original teacher is not present, check the higher hierarchy for an available teacher
           let higherTeacher = teacherHierarchy[originalTeacher]?.[0];
           if (higherTeacher && presentTeachers.includes(higherTeacher)) {
-            assignedTeacher = higherTeacher; // Assign to the higher teacher if they are present
+            assignedTeacher = higherTeacher; 
           }
         }
         return { ...student, teacher: assignedTeacher, originalTeacher: originalTeacher };
@@ -107,13 +100,11 @@ const ScheduleToday = () => {
   };
   
 
-  // Function to handle the reassigning of students when a teacher becomes present
   const resetStudentAssignments = (presentTeachers) => {
     setStudents((prevStudents) =>
       prevStudents.map((student) => {
-        // If the student's teacher has become present and they were previously reassigned, assign them back
         if (presentTeachers.includes(student.teacher) && student.reassigned) {
-          student.reassigned = false; // Reset reassignment flag
+          student.reassigned = false; 
         }
         return student;
       })
