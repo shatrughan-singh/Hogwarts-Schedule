@@ -1,0 +1,58 @@
+{
+  "name": "student",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/user-event": "^13.5.0",
+    "antd": "^5.22.2",
+    "assert": "^2.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4",
+    "winston": "^3.17.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "test:cucumber": "cucumber-js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "@babel/register": "^7.25.9",
+    "@cucumber/cucumber": "^11.1.0",
+    "@cucumber/pretty-formatter": "^1.0.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "babel-jest": "^29.7.0",
+    "chai": "^5.1.2",
+    "cucumber-html-reporter": "^7.2.0",
+    "cypress-cucumber-preprocessor": "^4.3.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.5.1",
+    "jsdom": "^25.0.1",
+    "puppeteer": "^23.9.0"
+  }
+}

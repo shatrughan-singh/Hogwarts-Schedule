@@ -1,0 +1,7 @@
+{
+    "presets": [
+        "@babel/preset-env",   // For JavaScript
+        "@babel/preset-react"  // For React JSX
+      ]
+}
+  
