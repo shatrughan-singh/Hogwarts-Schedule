@@ -68,36 +68,55 @@ const ScheduleToday = () => {
     setStudents((prevStudents) =>
       prevStudents.map((student) => {
         if (!student.teacher) {
-          // If no teacher is allocated, assign the standby teacher (Rubeus Hagrid)
-          student.teacher = "Rubeus Hagrid";
+          student.teacher = "Rubeus Hagrid"; // Assign standby teacher
         }
         return student;
       })
     );
   };
 
-  // Function to reassign students based on the teacher absence
-  const reassignStudents = (absentTeachers) => {
+  // Function to reassign students based on teacher attendance
+  const reassignStudents = (absentTeachers, presentTeachers) => {
     setStudents((prevStudents) =>
       prevStudents.map((student) => {
         let assignedTeacher = student.teacher;
+        const originalTeacher = student.originalTeacher || assignedTeacher;
+  
+        // Reassign if the current teacher is absent
         if (absentTeachers.includes(assignedTeacher)) {
-          // Traverse up the hierarchy to find a teacher
+          // Traverse up the hierarchy to find the next available teacher
           while (assignedTeacher && absentTeachers.includes(assignedTeacher)) {
             const higherTeacher = teacherHierarchy[assignedTeacher]?.[0];
             assignedTeacher = higherTeacher || "Not Assigned"; // If no higher teacher, assign "Not Assigned"
           }
         }
-        return { ...student, teacher: assignedTeacher };
+  
+        // If the assigned teacher is now present, restore the original teacher
+        if (presentTeachers.includes(originalTeacher)) {
+          assignedTeacher = originalTeacher; // Restore the original teacher if they are present
+        } else {
+          // If the original teacher is not present, check the higher hierarchy for an available teacher
+          let higherTeacher = teacherHierarchy[originalTeacher]?.[0];
+          if (higherTeacher && presentTeachers.includes(higherTeacher)) {
+            assignedTeacher = higherTeacher; // Assign to the higher teacher if they are present
+          }
+        }
+        return { ...student, teacher: assignedTeacher, originalTeacher: originalTeacher };
       })
     );
   };
+  
 
-  const handleAttendanceChange = (teacherName, status) => {
-    setTeachers((prevTeachers) =>
-      prevTeachers.map((teacher) =>
-        teacher.name === teacherName ? { ...teacher, attendance: status } : teacher
-      )
+  // Function to handle the reassigning of students when a teacher becomes present
+  const resetStudentAssignments = (presentTeachers) => {
+    setStudents((prevStudents) =>
+      prevStudents.map((student) => {
+        // If the student's teacher has become present and they were previously reassigned, assign them back
+        if (presentTeachers.includes(student.teacher) && student.reassigned) {
+          student.reassigned = false; // Reset reassignment flag
+        }
+        return student;
+      })
     );
   };
 
@@ -107,7 +126,11 @@ const ScheduleToday = () => {
 
   useEffect(() => {
     const absentTeachers = teachers.filter((teacher) => teacher.attendance === "Absent").map((teacher) => teacher.name);
-    reassignStudents(absentTeachers); // Reassign students when attendance changes
+    const presentTeachers = teachers.filter((teacher) => teacher.attendance === "Present").map((teacher) => teacher.name);
+
+    reassignStudents(absentTeachers, presentTeachers); // Reassign students when teachers are absent
+    resetStudentAssignments(presentTeachers); // Reset assignments when teachers become present
+
   }, [teachers]); // Trigger reassign on teacher attendance change
 
   return (
