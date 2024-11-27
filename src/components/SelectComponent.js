@@ -1,5 +1,4 @@
 import React from "react";
-import { Select } from "antd";
 
 const SelectComponent = ({ teacher, setTeachers, index }) => {
   const handleAttendanceChange = (teacherName, attendance) => {

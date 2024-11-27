@@ -112,17 +112,17 @@ const ScheduleToday = () => {
   };
 
   useEffect(() => {
-    assignTeachers(); // Assign teachers initially for unassigned students
+    assignTeachers();
   }, []);
 
   useEffect(() => {
     const absentTeachers = teachers.filter((teacher) => teacher.attendance === "Absent").map((teacher) => teacher.name);
     const presentTeachers = teachers.filter((teacher) => teacher.attendance === "Present").map((teacher) => teacher.name);
 
-    reassignStudents(absentTeachers, presentTeachers); // Reassign students when teachers are absent
-    resetStudentAssignments(presentTeachers); // Reset assignments when teachers become present
+    reassignStudents(absentTeachers, presentTeachers);
+    resetStudentAssignments(presentTeachers);
 
-  }, [teachers]); // Trigger reassign on teacher attendance change
+  }, [teachers]);
 
   return (
         <>
